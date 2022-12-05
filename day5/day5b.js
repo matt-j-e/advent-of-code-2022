@@ -14,14 +14,15 @@ const input = [
 const stacks = input;
 const helpers = require("../helpers/helperFunctions");
 const lines = helpers.loadData(__dirname.split("/").pop(), 0);
+
 lines.forEach((line) => {
   const instr = line.split(" ");
   const num = parseInt(instr[1]);
   const from = parseInt(instr[3]);
   const to = parseInt(instr[5]);
-  for (let i = 0; i < num; i++) {
-    stacks[to].push(stacks[from].pop());
-  }
+  const spliceStart = stacks[from].length - num;
+  const shiftStack = stacks[from].splice(spliceStart, num);
+  stacks[to] = [...stacks[to], ...shiftStack];
 });
 const message = stacks.map((stack) => stack.pop()).join("");
-console.log("A: Message =", message); // QNNTGTPFN
+console.log("B: Message =", message); // GGNPJBTTR

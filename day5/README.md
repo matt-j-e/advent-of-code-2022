@@ -1,0 +1,1 @@
+Decided to have separate files for the two parts of today's problem. Each part uses the same array as a start point and the array is mutated during the process. It was easier simply to start afresh than work with arrays already in memory.
