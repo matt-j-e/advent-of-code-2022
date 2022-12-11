@@ -2,14 +2,19 @@ const monkeys = require("./testStart");
 
 console.log(monkeys);
 
-monkeys.forEach((monkey) => {
-  for (let i = 0; i < monkey.items.length; i++) {
-    monkey.items[i] = monkey.operation(monkey.items[i]);
-    monkey.items[i] = Math.floor(monkey.items[i] / 3);
+monkeys.forEach((monkey, index) => {
+  console.log(index);
+  while (monkey.items.length > 0) {
+    monkey.items[0] = monkey.operation(monkey.items[0]);
+    monkey.items[0] = Math.floor(monkey.items[0] / 3);
     console.log(
-      `Monkey ${monkey.target(
-        monkey.items[i]
-      )} receives item with worry level of ${monkey.items[i]}`
+      `Item with worry level ${
+        monkey.items[0]
+      } is thrown to monkey ${monkey.target(monkey.items[0])}`
     );
+    const target = monkey.target(monkey.items[0]);
+    monkeys[target].items.push(monkey.items.shift());
   }
 });
+
+console.log(monkeys);

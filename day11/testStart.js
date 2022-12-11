@@ -20,7 +20,7 @@ const monkeys = [
   {
     items: [79, 60, 97],
     operation(item) {
-      return item ^ 2;
+      return item * item;
     },
     target: function (item) {
       return item % 13 === 0 ? 1 : 3;
