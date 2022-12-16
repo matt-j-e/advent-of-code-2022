@@ -17,6 +17,24 @@ function create2DArrayOfZeros(rows, cols) {
 }
 
 /**
+ * Create a 2d array with the defined number of rows & cols
+ * @param {*} rows The number of rows in the array
+ * @param {*} cols The number of columns in the array
+ * @returns the completed array
+ */
+function create2DArrayOfDots(rows, cols) {
+  const arr = [];
+  for (let i = 0; i < rows; i++) {
+    const row = [];
+    for (let j = 0; j < cols; j++) {
+      row.push(".");
+    }
+    arr.push(row);
+  }
+  return arr;
+}
+
+/**
  * Load the puzzle input into a starting array
  * @param {*} dir The current day's directory
  * @param {*} test  A flag to control whether the test input or
@@ -39,5 +57,6 @@ function loadData(dir, test = false) {
 
 module.exports = {
   create2DArrayOfZeros,
+  create2DArrayOfDots,
   loadData,
 };
