@@ -1,67 +1,45 @@
 const helpers = require("../helpers/helperFunctions");
-const lines = helpers.loadData(__dirname.split("/").pop(), true);
-console.log(lines);
+const lines = helpers.loadData(__dirname.split("/").pop(), false);
 
-class TreeNode {
-  constructor(id, type, size = 0) {
-    this.id = id;
-    this.type = type;
-    this.size = size;
-    this.children = [];
-  }
-}
+const currentPathNodes = [];
+const sizes = new Map();
 
-const nodes = [];
-let currentNode;
-lines.forEach((line) => {
-  const currentNodeIndex = nodes.findIndex((node) => node.id === currentNode);
+lines.forEach(line => {
   if (line.startsWith("$ cd") && !line.endsWith("..")) {
-    const id = line.split(" ")[2];
-    nodes.push(new TreeNode(id, "d"));
-    currentNode = id;
+    const nodeId = line.split(" ")[2];
+    const pathPrefix = currentPathNodes.length > 0 ? currentPathNodes[currentPathNodes.length - 1] + "/" : "";
+    const path = pathPrefix  +nodeId;
+    currentPathNodes.push(path);
+    sizes.set(path, 0);
   }
+
   if (!line.startsWith("$")) {
-    const id = line.split(" ")[1];
     const type = line.startsWith("dir") ? "d" : "f";
     if (type === "f") {
-      nodes.push(new TreeNode(id, type, line.split(" ")[0]));
-    } else {
-      nodes.push(new TreeNode(id, type));
+      currentPathNodes.forEach(node => {
+        sizes.set(node, sizes.get(node) + parseInt(line.split(" ")[0]))
+      });
     }
-    nodes[currentNodeIndex].children.push(id);
   }
+
   if (line === "$ cd ..") {
-    const parentIndex = nodes.findIndex((node) =>
-      node.children.includes(nodes[currentNodeIndex].id)
-    );
-    currentNode = nodes[parentIndex].id;
+    currentPathNodes.pop()
   }
 });
 
-// console.log(nodes);
-
-const dirNodes = nodes.filter((node) => node.children.length > 0);
-
-console.log(dirNodes);
-
-const dirSizes = [];
-function getDirSize(children) {
-  let dirSize = 0;
-  children.forEach((child) => {
-    const childIndex = nodes.findIndex((node) => node.id === child);
-    if (nodes[childIndex].children.length > 0)
-      dirSize = getDirSize(nodes[childIndex].children);
-    dirSize += parseInt(nodes[childIndex].size);
-  });
-  return dirSize;
+let smallDirsTotal = 0;
+const largeDirs = [];
+for (const [k, v] of sizes.entries()) {
+  if (v <= 100000) {
+    smallDirsTotal += v;
+    console.log(k, v)
+  }
+  if (v >= 30000000 - (70000000 - 41609574)) {
+    largeDirs.push(v);
+  }
 }
+console.log('A: Directories less then 100k total', smallDirsTotal); // 1778099
 
-dirNodes.forEach((node) => dirSizes.push(getDirSize(node.children)));
+console.log(sizes.get('/'))
 
-console.log("dirSizes", dirSizes);
-console.log(
-  "Dirs < 100k",
-  dirSizes
-    .filter((size) => size <= 100000)
-    .reduce((total, curr) => total + curr)
-);
+console.log('B: Smallest directory that frees up sufficient space has size:', largeDirs.sort((a, b) => a - b)[0]); // 1623571
