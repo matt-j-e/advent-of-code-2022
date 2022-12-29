@@ -14,9 +14,21 @@ function bothNumbers(a, b) {
   return typeof a === "number" && typeof b === "number"
 }
 
+function bothArrays(a, b) {
+  return Array.isArray(a) && Array.isArray(b)
+}
+
+function leftArrayRightNumber(a, b) {
+  return Array.isArray(a) && !Array.isArray(b)
+}
+
+function leftNumberRightArray(a, b) {
+  return !Array.isArray(a) && Array.isArray(b)
+}
+
 function compare(l, r) {
   /**
-   * THIS NEXT LINE WAS THE THING THAT I CHANGED TO GET IT TO WORK.
+   * THIS NEXT LINE WAS THE ASPECT THAT I CHANGED TO GET IT TO WORK.
    * Previously the number of loop iterations was set by the
    * SHORTEST array. I was then trying to look later at arrays
    * that still had elements. It failed to work on some occasions
@@ -44,17 +56,17 @@ function compare(l, r) {
       }
     }
 
-    if (Array.isArray(l[i]) && Array.isArray(r[i])) {
+    if (bothArrays(l[i], r[i])) {
       let substep = compare(l[i], r[i])
       if (substep !== null) {
         return substep
       }
-    } else if (Array.isArray(l[i]) && !Array.isArray(r[i])) {
+    } else if (leftArrayRightNumber(l[i], r[i])) {
       let substep = compare(l[i], [r[i]])
       if (substep !== null) {
         return substep
       }
-    } else if (!Array.isArray(l[i]) && Array.isArray(r[i])) {
+    } else if (leftNumberRightArray(l[i], r[i])) {
       let substep = compare([l[i]], r[i])
       if (substep !== null) {
         return substep
