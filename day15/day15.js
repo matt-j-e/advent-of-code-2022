@@ -4,7 +4,7 @@
  */
 
 const helpers = require("../helpers/helperFunctions");
-const lines = helpers.loadData(__dirname.split("/").pop(), 0);
+const lines = helpers.loadData(__dirname.split("/").pop(), 1);
 
 function negativeShift(sensors) {
   let negX = 0;
