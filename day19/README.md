@@ -27,3 +27,17 @@ Traversing the whole tree isn't possible.
 In Part One we have 24 iterations. That gives 24^9 leaves (quadrillions)
 
 **DFS** solution will avoid running out of memory - 24 minutes deep = max of 24 recursions =  no memory problem
+
+## SOLUTION TO PART ONE
+A DFS solution based heavily on hyper-neutrion's Python solution here: https://www.youtube.com/watch?v=H3PSODv4nf0 and https://github.com/hyper-neutrino/advent-of-code/blob/main/2022/day19p1.py
+
+Included optimisations:
+
+Optimisations:
+1. Never want more robots than the spend rate
+   eg. can spend a maximum of 4 Ore per minute, there's no point having more than 4 ore robots
+2. Jump ahead in time to build robots rather than step 1 minute at a time thereby removing all of the intermediate iterations/recursions
+3. If you couldn't possibly spend all of the resources that you have by the end of the time (eg with 10 minutes to go you could spend a maximum of 40 Ore) get rid of the excess
+   This leads to states being returned from a cache rather than being recalculated
+   Remember - DON'T THROW AWAY GEODES - EVER
+
