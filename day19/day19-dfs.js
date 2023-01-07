@@ -11,16 +11,7 @@ function maxSpend(bp) {
 
 function calculateWait(botSpec, minerals, bots) {
   let result = 0
-  // console.log("botSpec", botSpec)
-  // console.log("minerals", minerals)
-  // console.log("bots", bots)
   botSpec.forEach((mineralReqd, mineralId) => {
-    // console.log("----")
-    // console.log("mineralId", mineralId)
-    // console.log("mineralReqd", mineralReqd)
-    // console.log("mineral we have", minerals[mineralId])
-    // console.log("mineral we need to collect", mineralReqd - minerals[mineralId])
-    // console.log("number of bots we have", bots[mineralId])
     if (bots[mineralId] > 0) result = Math.max(result, Math.ceil((mineralReqd - minerals[mineralId]) / bots[mineralId]))
   })
   return result
@@ -29,18 +20,14 @@ function calculateWait(botSpec, minerals, bots) {
 function haveReqdBots(botSpec, bots) {
   for (let mineralId = 0; mineralId < 3; mineralId++) {
     const mineralReqd = botSpec[mineralId]
-    // console.log("mineralReqd", mineralReqd)
-    // console.log("mineralId", mineralId)
-    // console.log("bots of that type owned", bots[mineralId])
-    // console.log("mineralReqd > 0", mineralReqd > 0)
-    // console.log("Number of bots = 0", bots[mineralId] === 0)
-    // console.log("Both true", mineralReqd > 0 && bots[mineralId] === 0)
     if (mineralReqd > 0 && bots[mineralId] === 0) return false
   }
   return true
 }
 
+let recursions = 0
 function dfs(blueprint, maxSpend, minutes, cache, minerals, bots) {
+  recursions++
   // If no minutes left return current number of geodes
   if (minutes === 0) return minerals[3]
 
@@ -90,7 +77,7 @@ function dfs(blueprint, maxSpend, minutes, cache, minerals, bots) {
     const minerals_ = minerals.map((amount, mineralId) => amount + bots[mineralId] * (wait + 1))
     // Now deduct the minerals spent in building the current bot
     botSpec.forEach((mineralReqd, mineralId) => minerals_[mineralId] -= mineralReqd)
-    // and increase the current bot type by 1
+    // and increase by 1 the quantity of the current bot type
     bots_[botId]++
 
     // For each of our resource minerals (ore, clay & obsidian), if there is no
@@ -122,17 +109,10 @@ lines.forEach((line, index) => {
     ])
   })
   console.log(blueprint)
-  // console.log(maxSpend(blueprint))
 
   const geodes = dfs(blueprint, maxSpend(blueprint), 24, new Map(), [0,0,0,0], [1,0,0,0])
-  // console.log(geodes)
   total += (index + 1) * geodes
   })
 
 console.log("A: Combined quality level =", total) // 1092
-
-// console.log(calculateWait([3,14,0], [3,0,3,3], [1,1,0,0])) // should return 14
-// console.log(calculateWait([3,14,0], [3,0,3,3], [1,2,0,0])) // should return 7
-// console.log(calculateWait([11,14,0], [3,0,3,3], [1,2,0,0])) // should return 8
-
-// console.log(haveReqdBots([2,0,7], [23,29,0,0]))
+console.log(`To arrive at this solution the dfs function is run ${recursions} times`)

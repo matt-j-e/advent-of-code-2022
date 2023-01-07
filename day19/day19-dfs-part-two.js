@@ -25,7 +25,9 @@ function haveReqdBots(botSpec, bots) {
   return true
 }
 
+let count = 0
 function dfs(blueprint, maxSpend, minutes, cache, minerals, bots) {
+  count++
   if (minutes === 0) return minerals[3]
 
   const key = [minutes, ...minerals, ...bots].join("-")
@@ -79,3 +81,4 @@ for (let line = 0; line < 3; line++) {
 }
 
 console.log("B: Product of largest number of geodes from each blueprint:", total) // 3542
+console.log(`To arrive at this solution the dfs function is run ${count} times`)
